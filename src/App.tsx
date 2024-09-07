@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from "react";
-import celsiusFahrenheitFlow from "./assets/celsius-fahrenheit.json";
+import { celsiusFahrenheitFlow, endpoints } from "./flows/celsius-fahrenheit";
 import { useFlowEngine } from "./hooks/use-flow-engine";
 
 import "./App.css";
@@ -7,15 +7,17 @@ import "./App.css";
 function App() {
   const [celsius, setCelsius] = useState("");
   const [fahrenheit, setFahrenheit] = useState("");
+
+  const endPointToStateMap = {
+    [endpoints.celsius]: setCelsius,
+    [endpoints.fahrenheit]: setFahrenheit,
+  };
+
   const { sendMessageToNode } = useFlowEngine(
     celsiusFahrenheitFlow,
     (key, value) => {
-      if (key === "celsius") {
-        setCelsius(value);
-      }
-      if (key === "fahrenheit") {
-        setFahrenheit(value);
-      }
+      const setState = endPointToStateMap[key];
+      setState(value);
     }
   );
 
@@ -33,7 +35,7 @@ function App() {
               setCelsius(event.target.value);
               const input = event.target as HTMLInputElement;
               console.log("celsius input", input.value);
-              sendMessageToNode("celsius", input.value);
+              sendMessageToNode(endpoints.celsius, input.value);
             }}
           />
           <label>Fahrenheit</label>
@@ -45,7 +47,7 @@ function App() {
               setFahrenheit(event.target.value);
               const input = event.target as HTMLInputElement;
               console.log("fahrenheit input", input.value);
-              sendMessageToNode("fahrenheit", input.value);
+              sendMessageToNode(endpoints.fahrenheit, input.value);
             }}
           />
         </div>

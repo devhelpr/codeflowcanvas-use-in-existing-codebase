@@ -1,10 +1,10 @@
-import { FlowNode } from "@devhelpr/visual-programming-system";
+import { Flow, FlowNode } from "@devhelpr/visual-programming-system";
 import { NodeInfo } from "@devhelpr/web-flow-executor";
 import { useRef, useEffect } from "react";
 import { FlowEngine } from "../flow-engine/flow-engine";
 
 export const useFlowEngine = (
-  flow: any,
+  flow: Flow<NodeInfo>,
   onNodeMessage: (keyName: string, value: any) => void
 ) => {
   const flowEngine = useRef<FlowEngine>(new FlowEngine());
